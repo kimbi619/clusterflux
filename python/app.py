@@ -105,14 +105,6 @@ if __name__ == '__main__':
     if not wait_for_db():
         print("Could not connect to the database. Exiting.")
         exit(1)
-    try:
-        test_conn = psycopg2.connect(
-            "dbname='db' user='postgres' host='db' password='prodigy'"
-        )
-        print("Test connection successful!")
-        test_conn.close()
-    except Exception as e:
-        print(f"Test connection failed: {e}")
 
     create_pressed_table()
     app.run(host='0.0.0.0', port=5000)
