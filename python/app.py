@@ -107,7 +107,7 @@ if __name__ == '__main__':
         exit(1)
     try:
         test_conn = psycopg2.connect(
-            "dbname='yourdb' user='postgres' host='localhost' password='prodigy'"
+            "dbname='db' user='postgres' host='db' password='prodigy'"
         )
         print("Test connection successful!")
         test_conn.close()
