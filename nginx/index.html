@@ -48,10 +48,9 @@
     <div class="status-indicator"></div>
 
     <script>
-        // Function to get the current count
         async function getCount() {
             try {
-                const response = await fetch('http://localhost:5000/api/get-status');
+                const response = await fetch('/api/get-status');
                 const data = await response.json();
                 document.getElementById('count').textContent = data.count;
             } catch (error) {
@@ -59,10 +58,9 @@
             }
         }
 
-        // Function to increment the count
         async function incrementCount() {
             try {
-                const response = await fetch('http://localhost:5000/api/pressed');
+                const response = await fetch('/api/pressed');
                 const data = await response.json();
                 document.getElementById('count').textContent = data.count;
             } catch (error) {
