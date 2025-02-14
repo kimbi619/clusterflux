@@ -1,0 +1,31 @@
+services:
+  flask-app:
+    build:
+      context: ./python
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_NAME=db
+      - DB_USER=postgres
+      - DB_PASSWORD=prodigy
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    command: bash -c 'sleep 10 && python app.py'
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: DockerfileDev
+    ports:
+      - "8080:80"
+    depends_on:
+      - flask-app
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: prodigy
+ 

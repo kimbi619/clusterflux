@@ -1,17 +1,19 @@
 from flask import Flask, jsonify
 from flask_cors import CORS 
 import psycopg2
+import os
+import time
 
 app = Flask(__name__)
 CORS(app)
 
 # Database connection parameters
 db_params = {
-    "dbname": "yourdb",
-    "user": "postgres",
-    "password": "prodigy",
-    "host": "localhost", 
-    "port": "5432" 
+    "dbname": os.getenv("DB_NAME", "yourdb"),
+    "user": os.getenv("DB_USER", "postgres"),
+    "password": os.getenv("DB_PASSWORD", "prodigy"),
+    "host": os.getenv("DB_HOST", "db"),
+    "port": "5432"
 }
 
 # Function to create the "pressed" table
@@ -85,8 +87,24 @@ def increment_pressed():
         if conn:
             conn.close()
 
+def wait_for_db(max_retries=30, delay_seconds=1):
+    for attempt in range(max_retries):
+        try:
+            conn = psycopg2.connect(**db_params)
+            conn.close()
+            print("Successfully connected to the database")
+            return True
+        except psycopg2.OperationalError as e:
+            print(f"Attempt {attempt + 1}/{max_retries}: Database not ready. Retrying in {delay_seconds} seconds...")
+            time.sleep(delay_seconds)
+    return False
+
+
+
 if __name__ == '__main__':
-    # Test connection first
+    if not wait_for_db():
+        print("Could not connect to the database. Exiting.")
+        exit(1)
     try:
         test_conn = psycopg2.connect(
             "dbname='yourdb' user='postgres' host='localhost' password='prodigy'"
@@ -96,6 +114,5 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"Test connection failed: {e}")
 
-    # Create the "pressed" table if it doesn't exist
     create_pressed_table()
     app.run(host='0.0.0.0', port=5000)
