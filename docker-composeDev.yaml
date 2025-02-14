@@ -21,6 +21,8 @@ services:
       - "8080:80"
     depends_on:
       - flask-app
+    networks:
+      - app-network
 
   postgres:
     image: postgres:latest
@@ -28,4 +30,14 @@ services:
       POSTGRES_DB: db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: prodigy
- 
+    networks:
+      - app-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
