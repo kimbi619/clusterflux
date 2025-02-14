@@ -8,7 +8,8 @@ db_params = {
     "dbname": "yourdb",
     "user": "postgres",
     "password": "prodigy",
-    "host": "localhost",  
+    "host": "localhost", 
+    "port": "5432" 
 }
 
 # Function to create the "pressed" table
@@ -83,7 +84,16 @@ def increment_pressed():
             conn.close()
 
 if __name__ == '__main__':
+    # Test connection first
+    try:
+        test_conn = psycopg2.connect(
+            "dbname='yourdb' user='postgres' host='localhost' password='prodigy'"
+        )
+        print("Test connection successful!")
+        test_conn.close()
+    except Exception as e:
+        print(f"Test connection failed: {e}")
+
     # Create the "pressed" table if it doesn't exist
     create_pressed_table()
-
-    app.run(host='0.0.0.0', port=5000)  # Replace with your preferred host and port
+    app.run(host='0.0.0.0', port=5000)
