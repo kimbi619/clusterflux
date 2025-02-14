@@ -33,8 +33,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=prodigy
       - POSTGRES_HOST_AUTH_METHOD=trust
- 
-      
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

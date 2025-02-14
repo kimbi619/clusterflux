@@ -1,19 +1,15 @@
 from flask import Flask, jsonify
-from flask_cors import CORS 
 import psycopg2
 import os
-import time
 
 app = Flask(__name__)
-CORS(app)
 
 # Database connection parameters
 db_params = {
-    "dbname": os.getenv("DB_NAME", "yourdb"),
-    "user": os.getenv("DB_USER", "postgres"),
-    "password": os.getenv("DB_PASSWORD", "prodigy"),
-    "host": os.getenv("DB_HOST", "db"),
-    "port": "5432"
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
 }
 
 # Function to create the "pressed" table
@@ -87,24 +83,8 @@ def increment_pressed():
         if conn:
             conn.close()
 
-def wait_for_db(max_retries=30, delay_seconds=1):
-    for attempt in range(max_retries):
-        try:
-            conn = psycopg2.connect(**db_params)
-            conn.close()
-            print("Successfully connected to the database")
-            return True
-        except psycopg2.OperationalError as e:
-            print(f"Attempt {attempt + 1}/{max_retries}: Database not ready. Retrying in {delay_seconds} seconds...")
-            time.sleep(delay_seconds)
-    return False
-
-
-
 if __name__ == '__main__':
-    if not wait_for_db():
-        print("Could not connect to the database. Exiting.")
-        exit(1)
-
+    # Create the "pressed" table if it doesn't exist
     create_pressed_table()
-    app.run(host='0.0.0.0', port=5000)
+
+    app.run(host='0.0.0.0', port=5000)  # Replace with your preferred host and port

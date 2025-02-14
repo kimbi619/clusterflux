@@ -11,6 +11,7 @@ services:
       - DB_HOST=postgres
     depends_on:
       - postgres
+    command: bash -c 'sleep 10 && python app.py'
 
   nginx:
     build:
