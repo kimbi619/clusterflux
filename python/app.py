@@ -6,9 +6,9 @@ app = Flask(__name__)
 # Database connection parameters
 db_params = {
     "dbname": "yourdb",
-    "user": "youruser",
-    "password": "yourpassword",
-    "host": "localhost",  # Change this if your database is on a different host
+    "user": "postgres",
+    "password": "prodigy",
+    "host": "localhost",  
 }
 
 # Function to create the "pressed" table
