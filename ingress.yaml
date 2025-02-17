@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+spec:
+  rules:
+    - host: kimbi.hackster.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+            <# connects to the Service we just created>
+              service:
+                name: nginx-service
+                port:
+                  number: 80
