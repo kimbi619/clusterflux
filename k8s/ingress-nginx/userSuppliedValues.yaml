@@ -3,4 +3,5 @@ controller:
     certManager:
       enabled: "true"
   service:
-    externalIPs: ["<ip-address>"]
+    externalIPs:
+      - "102.220.87.118"
