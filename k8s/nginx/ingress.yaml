@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    # here is how we tell cert-manager to generate the TLS certs!
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    
+    # and we are also forcing traffic to be HTTPs-only
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    # change it to, well, your domain
+    - kimbi.hackster.me
+    # here is where the TLS certs will be stored
+    secretName: nginx-tls-secret
+  rules:
+  # change it to, well, your domain
+  - host: kimbi.hackster.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            # points to the service we created on the file above
+            name: nginx-service
+            port:
+              number: 80

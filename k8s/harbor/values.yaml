@@ -1,11 +1,11 @@
-externalURL: https://kimbi.hackster.me
+externalURL: https://kimbiharbor.hackster.me
 exposureType: ingress
 ingress:
   core:
     ingressClassName: "nginx"
     pathType: ImplementationSpecific
     controller: default
-    hostname: kimbi.hackster.me
+    hostname: kimbiharbor.hackster.me
     annotations:
       ingress.kubernetes.io/ssl-redirect: "true"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
