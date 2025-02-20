@@ -1,0 +1,26 @@
+name: Build and Push Helm Chart to Harbor
+
+on:
+  push:
+    paths:
+      - 'helm/buttons/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Build and Push Helm Chart
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        HARBOR_ENDPOINT: ${{ secrets.HARBOR_ENDPOINT }}
+      run: |
+        cd helm
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin $HARBOR_ENDPOINT
+        helm lint buttons
+        helm package buttons
+        helm push buttons-*.tgz oci://$HARBOR_ENDPOINT/application
