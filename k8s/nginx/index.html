@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Hackschool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        .count-display {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Hackschool, now press the button</h1>
+    <p>This is a simple landing page hosted by Nginx on your server.</p>
+    <button id="pressButton">Press my button</button>
+    <div class="count-display">Button Press Count: <span id="count">0</span></div>
+    <div class="status-indicator"></div>
+
+    <script>
+        async function getCount() {
+            try {
+                const response = await fetch('/api/get-status');
+                const data = await response.json();
+                document.getElementById('count').textContent = data.count;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function incrementCount() {
+            try {
+                const response = await fetch('/api/pressed');
+                const data = await response.json();
+                document.getElementById('count').textContent = data.count;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Add click event listener to the button
+        document.getElementById('pressButton').addEventListener('click', incrementCount);
+
+        // Get initial count when page loads
+        getCount();
+    </script>
+</body>
+</html>
