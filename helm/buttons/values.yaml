@@ -1,2 +1,25 @@
 imagePullSecrets:
   - name: your-regcred
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: 
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: kimbi.hackster.me
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: nginx
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: python-deployment
+            port: 5000
+  tls: 
+    - secretName: nginx-tls-secret
+      hosts:
