@@ -23,3 +23,10 @@ spec:
             name: nginx-service
             port:
               number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: python-service
+            port:
+              number: 5000
