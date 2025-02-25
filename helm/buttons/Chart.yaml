@@ -1,5 +1,4 @@
 apiVersion: v2
-
 name: buttons
 description: A Helm chart for the Buttons app
 type: application
