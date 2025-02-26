@@ -23,3 +23,50 @@ ingress:
   tls: 
     - secretName: nginx-tls-secret
       hosts:
+
+nginx:
+  image:
+    repository: kimbiharbor.hackster.me/application/nginx
+    tag: v2
+  replicaCount: 1
+  name: nginx
+  serverName: kimbi.hackster.me
+  rootPath: "/usr/share/nginx/html"
+  mountPath: "/etc/nginx/conf.d"
+  indexFiles:
+    - "index.html"
+    - "index.htm"
+  service:
+    type: ClusterIP
+    port: 80
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+
+python:
+  image:
+    repository: kimbiharbor.hackster.me/application/python
+    tag: v2
+  name: nginx
+  name: python
+  envs:
+    - name: DB_HOST
+      value: "postgresql.default.svc.cluster.local" 
+    - name: DB_NAME
+      value: dbname
+    - name: DB_USER
+      value: youruser
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgresql
+          key: password
+  service: 
+    type: ClusterIP
+    port: 5000
