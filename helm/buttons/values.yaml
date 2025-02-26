@@ -1,5 +1,6 @@
 imagePullSecrets:
   - name: your-regcred
+  
 ingress:
   enabled: true
   className: nginx
