@@ -41,13 +41,13 @@ spec:
             httpGet:
               path: /
               port: http
-          # mounting the ConfigMap
           volumeMounts:
             - name: nginx-config-volume
               mountPath: {{ .Values.python.mountPath}}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      # mounting the ConfigMap
+
+
       volumes:
         - name: nginx-config-volume
           configMap:
