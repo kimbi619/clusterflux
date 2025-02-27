@@ -29,9 +29,11 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.python.image.repository }}:{{ .Values.python.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.python.image.pullPolicy }}
+          command: ["python"]
+          args: ["app.py"]
           ports:
             - name: http
-              containerPort: {{ .Values.python.service.port }}
+              containerPort: {{ .Values.python.service.port | default 5000 }}
               protocol: TCP
           livenessProbe:
             httpGet:
