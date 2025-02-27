@@ -35,20 +35,15 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /api
+              path: /health
               port: http
           readinessProbe:
             httpGet:
-              path: /api
+              path: /health
               port: http
-          volumeMounts:
-            - name: nginx-config-volume
-              mountPath: {{ .Values.python.mountPath}}
+          env:
+            {{- if .Values.python.envs }}
+            {{- toYaml .Values.python.envs | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
-
-      volumes:
-        - name: nginx-config-volume
-          configMap:
-            name: nginx-config
