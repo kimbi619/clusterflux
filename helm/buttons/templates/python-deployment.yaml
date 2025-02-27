@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.python.name }}
+  labels:
+    {{- include "button.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.python.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "button.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.python.name }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "button.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.python.name }}
+
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.python.image.repository }}:{{ .Values.python.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.python.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.python.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          # mounting the ConfigMap
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: {{ .Values.python.mountPath}}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      # mounting the ConfigMap
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
